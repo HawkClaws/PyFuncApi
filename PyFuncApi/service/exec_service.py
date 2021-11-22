@@ -9,8 +9,9 @@ from ..service.common_function import to_json
 from django.conf import settings
 
 async_data_repository = Repository(settings.ASYNC_DATA_REPOSITORY_URL)
-
+# 外部からの入力
 EXEC_INPUT = 'exec_input'
+# API実行結果
 EXEC_RESULT = 'exec_result'
 ASYNC_REPOSITORY = 'async_data_repository'
 EXEC_RESULT_STATUS = 'exec_result_status'
@@ -22,8 +23,12 @@ HTTP_RESPONSE = "http_response"
 IS_SUCCESS = "is_success"
 
 def exec_async_wrapper(code, input=""):
+    """
+    Pythonのコードを非同期実行します
+    """
     result_id = str(uuid.uuid4())
 
+    # 非同期の実行結果を保存する
     code = code + '\nasync_data_repository.update(result_id,to_json(exec_result))'
     # code = code + '\nprint(async_data_repository.update(result_id,to_json(exec_result)).text)'
     # code = code + '\nprint(to_json(exec_result))'

@@ -28,6 +28,9 @@ CODE_DATA_REPOSITORY_URL = "https://XXXXXXXXXXXXXXXXXX.firebaseio.com/CODE_DATA_
 #非同期実行時の結果保存用のRealtimeDatabaseのURL(設定必須：URLのみ「.json」は除く)
 ASYNC_DATA_REPOSITORY_URL = "https://XXXXXXXXXXXXXXXXXX.firebaseio.com/ASYNC_DATA_REPOSITORY_URL_XXXXXXXXXXXXXXXXXX/"
 
+#API実行ログ保存用のRealtimeDatabaseのURL(設定必須：URLのみ「.json」は除く)
+LOGGING_REPOSITORY_URL = "https://XXXXXXXXXXXXXXXXXX.firebaseio.com/LOGGING_REPOSITORY_URL_XXXXXXXXXXXXXXXXXX/"
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
