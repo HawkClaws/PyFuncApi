@@ -15,6 +15,7 @@ EXEC_INPUT = 'exec_input'
 EXEC_RESULT = 'exec_result'
 ASYNC_REPOSITORY = 'async_data_repository'
 EXEC_RESULT_STATUS = 'exec_result_status'
+REQUEST = 'request'
 
 TO_JSON = 'to_json'
 RESILT_ID = "result_id"
@@ -22,19 +23,22 @@ RESILT_ID = "result_id"
 HTTP_RESPONSE = "http_response"
 IS_SUCCESS = "is_success"
 
-def exec_async_wrapper(code, input=""):
+
+def exec_async_wrapper(code, request, input=""):
     """
     Pythonのコードを非同期実行します
     """
     result_id = str(uuid.uuid4())
 
     # 非同期の実行結果を保存する
-    code = code + '\nasync_data_repository.update(result_id,to_json(exec_result))'
+    code = code + \
+        '\nasync_data_repository.update(result_id,to_json(exec_result))'
     # code = code + '\nprint(async_data_repository.update(result_id,to_json(exec_result)).text)'
     # code = code + '\nprint(to_json(exec_result))'
     ref_data = {}
 
     # api_exec_async_data[result_id] = ref_data
+    ref_data[REQUEST] = request
     ref_data[EXEC_INPUT] = input
     ref_data[EXEC_RESULT] = {}
     ref_data[ASYNC_REPOSITORY] = async_data_repository
@@ -45,12 +49,13 @@ def exec_async_wrapper(code, input=""):
     return HttpResponse(json.dumps({RESILT_ID: result_id}))
 
 
-def exec_wrapper(code, input="", repository={}):
+def exec_wrapper(code, request, input="", repository={}):
     """
     Pythonのコードを同期実行します
     """
     data = {}
     data[EXEC_INPUT] = input
+    data[REQUEST] = request
     try:
         exec(code, data)
     except Exception as e:
@@ -78,19 +83,3 @@ def api_exec_async_result(request: HttpRequest, result_id: str):
     res = HttpResponse(result)
     res['Content-Type'] = 'text/json'
     return res
-    
-
-# def api_exec_async_result(request: HttpRequest, result_id: str):
-#     """
-#     非同期実行の結果を取得します
-#     """
-#     if result_id in api_exec_async_data.keys():
-#         log_data = api_exec_async_data[result_id]
-#         if EXEC_RESULT in log_data.keys():
-#             ret_data = log_data[EXEC_RESULT]
-#             del api_exec_async_data[result_id]
-#             return HttpResponse(ret_data)
-#         else:
-#             return HttpResponse('Not Found exec_result', status=404)
-#     else:
-#         return HttpResponse('Not Found result_id', status=404)

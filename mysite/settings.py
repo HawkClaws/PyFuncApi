@@ -22,6 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '28B35970D4D148F88F6CDEA42E4CD1FC'
 
+# APIの作成・取得時に使用するパスワード
+ADMIN_SECRET_KEY = '28B35970D4D148F88F6CDEA42E4CD1FC'
+
 #コード格納用のRealtimeDatabaseのURL(設定必須：URLのみ「.json」は除く)
 CODE_DATA_REPOSITORY_URL = "https://XXXXXXXXXXXXXXXXXX.firebaseio.com/CODE_DATA_REPOSITORY_URL_XXXXXXXXXXXXXXXXXX/"
 

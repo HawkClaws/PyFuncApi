@@ -4,7 +4,6 @@ from datetime import datetime
 import json
 import time
 
-
 def request_extend(method, url, body, headers):
     res = requests.request(method, url=url,
                            data=body, headers=headers)
