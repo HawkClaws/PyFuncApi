@@ -14,7 +14,8 @@ def api_operation_common(api_data, method, check):
         result = get_code_data(api_data["url"])
     elif method == "POST":
         try:
-            exists = get_code_data(api_data["url"])
+            #キャッシュをクリアする
+            exists = get_code_data(api_data["url"],cache=False)
             if exists != None:
                 return HttpResponse('URL that already exists', status=400)
 
@@ -43,10 +44,11 @@ def api_operation_common(api_data, method, check):
     return HttpResponse(result)
 
 
-def get_code_data(url):
-    if (url in code_data_cache.keys()) == False:
+def get_code_data(url,cache=True):
+    if (url in code_data_cache.keys()) == False or cache == False:
         code_data = json.loads(code_data_repository.select(url).text)
         if code_data == None:
+            code_data_cache.pop(url, None)
             return code_data
         code_data_cache[url] = code_data
     return code_data_cache[url]

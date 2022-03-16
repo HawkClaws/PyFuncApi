@@ -16,13 +16,13 @@ EXEC_RESULT = 'exec_result'
 ASYNC_REPOSITORY = 'async_data_repository'
 EXEC_RESULT_STATUS = 'exec_result_status'
 REQUEST = 'request'
+RESPONSE = 'response'
 
 TO_JSON = 'to_json'
 RESILT_ID = "result_id"
 
 HTTP_RESPONSE = "http_response"
 IS_SUCCESS = "is_success"
-
 
 def exec_async_wrapper(code, request, input=""):
     """
@@ -65,6 +65,9 @@ def exec_wrapper(code, request, input="", repository={}):
     status_code = 200
     if EXEC_RESULT_STATUS in data.keys():
         status_code = data[EXEC_RESULT_STATUS]
+
+    if RESPONSE in data.keys():
+        return {HTTP_RESPONSE: data[RESPONSE], IS_SUCCESS: True}
 
     if EXEC_RESULT in data.keys():
         return {HTTP_RESPONSE: HttpResponse(data[EXEC_RESULT], status=status_code), IS_SUCCESS: True}

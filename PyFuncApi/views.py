@@ -39,7 +39,8 @@ def api_exec(request: HttpRequest, url: str):
             return HttpResponse("Can not find api url:"+url)
 
         res = exec_wrapper(code_info["code"], request, input)[HTTP_RESPONSE]
-        res['Content-Type'] = 'text/json'
+        if res['Content-Type'] == '':
+            res['Content-Type'] = 'text/json'
         return res
     except Exception as e:
         print(traceback.format_exc())
