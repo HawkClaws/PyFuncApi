@@ -12,3 +12,5 @@ beautifulsoup4==4.8.2
 numpy==1.18.1
 lxml==4.5.0
 html5lib==1.0.1
+mojimoji==0.0.12
+tweepy-authlib==1.0.2
