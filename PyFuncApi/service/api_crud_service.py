@@ -1,40 +1,49 @@
-from types import TracebackType
-from ..repository.repository import Repository
-from ..service.exec_service import *
+import json
+import traceback
+from django.shortcuts import HttpResponse
+from ..service.exec_service import exec_wrapper
+from ..repository.instance_mongo_repository import get_api_data_repository
 
 code_data_cache = {}
-code_data_repository = Repository(settings.CODE_DATA_REPOSITORY_URL)
 
-def api_operation_common(api_data, method, check):
+
+def delete_code_cache():
+    global code_data_cache
+    code_data_cache = {}
+
+
+def api_operation_service(api_data, method, check):
     """
     APIの情報を登録等の操作をします
     """
     result = ""
     if method == "GET":
         result = get_code_data(api_data["url"])
+        result = result["code"]
     elif method == "POST":
         try:
-            #キャッシュをクリアする
-            exists = get_code_data(api_data["url"],cache=False)
+            # キャッシュをクリアする
+            exists = get_code_data(api_data["url"], cache=False)
             if exists != None:
                 return HttpResponse('URL that already exists', status=400)
 
-            res_json = {IS_SUCCESS: True,
-                        HTTP_RESPONSE: HttpResponse("No Check")}
+            res = HttpResponse("No Check")
             if check == True:
-                res_json = exec_wrapper(api_data["url"])
-            
-            if res_json[IS_SUCCESS]:
-                json_res = code_data_repository.update(
-                    api_data["url"], json.dumps(api_data)).text
-                data = json.loads(str(json_res))
-                data["result"] = res_json[HTTP_RESPONSE].content.decode(
+                # TODO Check必要？再検討。
+                res = exec_wrapper(api_data["url"])
+            if res.status_code == 200:  # TODO 200のみでOK？再検討。
+                json_res = get_api_data_repository().update(
+                    api_data["url"], api_data)
+                data = json_res.raw_result
+
+                del data["upserted"]
+                data["result"] = res.content.decode(
                     'utf-8')
                 result = json.dumps(data)
-            elif res_json[IS_SUCCESS] == False:
-                return res_json[HTTP_RESPONSE]
+            else:
+                return res
         except Exception as e:
-            print(TracebackType.format_exc())
+            print(traceback.format_exc())
             return HttpResponse(e, status=400)
     elif method == "PUT":
         return HttpResponse("", status=501)
@@ -44,9 +53,10 @@ def api_operation_common(api_data, method, check):
     return HttpResponse(result)
 
 
-def get_code_data(url,cache=True):
+def get_code_data(url, cache=True):
+    global code_data_cache
     if (url in code_data_cache.keys()) == False or cache == False:
-        code_data = json.loads(code_data_repository.select(url).text)
+        code_data = get_api_data_repository().select({"id": url})
         if code_data == None:
             code_data_cache.pop(url, None)
             return code_data

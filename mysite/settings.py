@@ -20,19 +20,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '28B35970D4D148F88F6CDEA42E4CD1FC'
+SECRET_KEY = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
 # APIの作成・取得時に使用するパスワード
-ADMIN_SECRET_KEY = '28B35970D4D148F88F6CDEA42E4CD1FC'
+ADMIN_SECRET_KEY = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
-#コード格納用のRealtimeDatabaseのURL(設定必須：URLのみ「.json」は除く)
-CODE_DATA_REPOSITORY_URL = "https://XXXXXXXXXXXXXXXXXX.firebaseio.com/CODE_DATA_REPOSITORY_URL_XXXXXXXXXXXXXXXXXX/"
+# MongoDB接続文字列
+MONGO_REPOSITORY_URL = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
-#非同期実行時の結果保存用のRealtimeDatabaseのURL(設定必須：URLのみ「.json」は除く)
-ASYNC_DATA_REPOSITORY_URL = "https://XXXXXXXXXXXXXXXXXX.firebaseio.com/ASYNC_DATA_REPOSITORY_URL_XXXXXXXXXXXXXXXXXX/"
-
-#API実行ログ保存用のRealtimeDatabaseのURL(設定必須：URLのみ「.json」は除く)
-LOGGING_REPOSITORY_URL = "https://XXXXXXXXXXXXXXXXXX.firebaseio.com/LOGGING_REPOSITORY_URL_XXXXXXXXXXXXXXXXXX/"
+#Datadog APIKEY
+DATADOG_API_KEY= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+DATADOG_APP_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -74,7 +72,7 @@ CORS_ORIGIN_WHITELIST = [
 
 # CORS_ALLOW_CREDENTIALS = True
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'mysite.urls'
 
@@ -151,10 +149,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-try:
-    from .local_settings import *
-except ImportError:
-    pass
 
 if not DEBUG:
     import django_heroku
